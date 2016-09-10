@@ -12,12 +12,13 @@ DATA_PATH = os.path.join('data')
 FILE_NAME = 'facebook.json'
 
 URL = 'https://graph.facebook.com/search'
-LOCATIONS = ('kiev',)
+LOCATIONS = ('kiev', 'kyiv')
 TYPE = 'event'
 ADDITIONAL = {'debug': 'all', 'format': 'json', 'limit': 1000}
 
 
 def get_events(request_count=5):
+    print 'About to get events from facebook ...'
     events = []
     for location in LOCATIONS:
         params = {
@@ -27,14 +28,16 @@ def get_events(request_count=5):
         }
         params.update(ADDITIONAL)
         for _ in range(request_count):
-            response = requests.get(URL, params=params).json()
-            data = response['data']
+            response = requests.get(URL, params=params)
+            response_json = response.json()
+            data = response_json['data']
             if not data:
                 break
+            print '  Successfully downloaded %s events from %s' % (len(data), response.request.url)
             events += data
-            after = response['paging']['cursors']['after']
-            params[after] = after
-
+            after = response_json['paging']['cursors']['after']
+            params['after'] = after
+    print '... Successfully parsed all events from facebook.'
     return events
 
 
@@ -50,6 +53,7 @@ def _merge_events(old_events, new_events):
 
 
 def save_events(events):
+    print 'About to save parsed events ...'
     _create_path_if_not_exists(DATA_PATH)
     path = os.path.join(DATA_PATH, FILE_NAME)
     with open(path, 'r') as f:
@@ -57,6 +61,7 @@ def save_events(events):
     events = _merge_events(old_events, events)
     with open(path, 'w') as f:
         json.dump(events, f)
+    print '... Successfully saved parsed events.'
 
-# events = get_events()
-save_events([])
+events = get_events()
+save_events(events)
