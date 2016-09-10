@@ -3,8 +3,8 @@ Parses events from facebook graph API.
 
 How to use?
 1. Go to https://developers.facebook.com/tools/explorer/ and generate token.
-   Save token into "token.txt" file in the repository root.
-2. Execute this file. Events should be saved in <repo>/data/facebook.json file.
+   Save token into "tokens/facebook_token.txt" file in the repository root.
+2. Execute this file. Events should be saved in "data/facebook.json" file.
 """
 import json
 import os
