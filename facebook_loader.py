@@ -43,11 +43,20 @@ def _create_path_if_not_exists(path):
         os.makedirs(path)
 
 
+def _merge_events(old_events, new_events):
+    """ Add unique new events to old ones. """
+    old_ids = [event['id'] for event in old_events]
+    return old_events + [event for event in new_events if event['id'] not in old_ids]
+
+
 def save_events(events):
     _create_path_if_not_exists(DATA_PATH)
-    # TODO: GET existed events and compare them
-    with open(os.path.join(DATA_PATH, FILE_NAME), 'w') as outfile:
-        json.dump(events, outfile)
+    path = os.path.join(DATA_PATH, FILE_NAME)
+    with open(path, 'r') as f:
+        old_events = json.load(f)
+    events = _merge_events(old_events, events)
+    with open(path, 'w') as f:
+        json.dump(events, f)
 
-events = get_events()
-save_events(events)
+# events = get_events()
+save_events([])
