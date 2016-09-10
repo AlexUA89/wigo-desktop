@@ -12,7 +12,7 @@ import requests
 
 
 # facebook token
-with open('token.txt', 'r') as f:
+with open(os.path.join('tokens', 'facebook_token.txt'), 'r') as f:
     TOKEN = f.readline()
 # parsed data folder (relative or absolute path)
 DATA_PATH = os.path.join('data')

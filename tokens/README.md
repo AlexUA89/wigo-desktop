@@ -1,0 +1,1 @@
+This folder should contain files with token for access via API.
