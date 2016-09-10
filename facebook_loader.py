@@ -1,11 +1,19 @@
-""" Parses events from facebook graph API """
+"""
+Parses events from facebook graph API.
+
+How to use?
+1. Go to https://developers.facebook.com/tools/explorer/ and generate token.
+   Save token into "token.txt" file in the repository root.
+2. Execute this file. Events should be saved in <repo>/data/facebook.json file.
+"""
 import json
 import os
 import requests
 
 
 # facebook token
-TOKEN = 'EAACEdEose0cBAPUGwEAAgCKZAIC7WeVulsMLxcxK6byHLZARr8DC5v93tphF5PgleVHSEndXGZAgSS7rPHl656iF9XP0ZBlu0lKc5CVGChu0ykxGhDCItHP5H1txPKaOS2u8xpzSomXmk9bPPKShSGGB5S0TMaK91qZAUuRdqeQZDZD'
+with open('token.txt', 'r') as f:
+    TOKEN = f.readline()
 # parsed data folder (relative or absolute path)
 DATA_PATH = os.path.join('data')
 # parsed data file name
