@@ -19,10 +19,10 @@ DATA_PATH = os.path.join('data')
 # parsed data file name
 FILE_NAME = 'facebook.json'
 
-URL = 'https://graph.facebook.com/search'
+URL = 'https://graph.facebook.com/v2.7/search'
 LOCATIONS = ('kiev', 'kyiv')
 TYPE = 'event'
-ADDITIONAL = {'debug': 'all', 'format': 'json', 'limit': 1000}
+ADDITIONAL = {'format': 'json', 'limit': 1000}
 
 
 def get_events(request_count=5):
