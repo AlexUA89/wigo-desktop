@@ -64,12 +64,14 @@ def save_events(events):
     print 'About to save parsed events ...'
     _create_path_if_not_exists(DATA_PATH)
     path = os.path.join(DATA_PATH, FILE_NAME)
-    with open(path, 'r') as f:
-        old_events = json.load(f)
-    events = _merge_events(old_events, events)
+    if os.path.exists(path):
+        with open(path, 'r') as f:
+            old_events = json.load(f)
+        events = _merge_events(old_events, events)
     with open(path, 'w') as f:
         json.dump(events, f)
     print '... Successfully saved parsed events.'
+
 
 events = get_events()
 save_events(events)
