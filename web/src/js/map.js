@@ -1,76 +1,60 @@
 var map = new GMaps({
   el: '#map',
   lat: config.LATITUDE,
-  lng: config.LONGTITUDE,
-  // disableDoubleClickZoom: true,
+  lng: config.LONGITUDE
 });
 
-
-// google.maps.event.addListener(map, "rightclick", function(event) {
-//     alert('QQQ');
-//     var lat = event.latLng.lat();
-//     var lng = event.latLng.lng();
-//     // populate yor box/field with lat, lng
-//     alert("Lat=" + lat + "; Lng=" + lng);
-// });
-
-
-
-GMaps.on('rightclick', map.map, function(event) {
-  var index = map.markers.length;
-  var lat = event.latLng.lat();
-  var lng = event.latLng.lng();
-
-  
-  menu = $(".custom-menu");
+function showCreationMenu(event) {
+  menu = $(".creation-menu");
   if (menu.is(":visible")) return;
-  // Show context menu
+  lat = event.latLng.lat();
+  lng = event.latLng.lng();
   menu.finish().toggle(100);
   menu.css({
       top: event.pixel.y + "px",
-      left: event.pixel.x + "px"
+      left: event.pixel.x + 10 + "px"
   });
-});
+}
 
-// If the document is clicked somewhere
-$(document).bind("mousedown", function (e) {
-    
-    // If the clicked element is not the menu
-    if (!$(e.target).parents(".custom-menu").length > 0) {
-        
-        // Hide it
-        $(".custom-menu").hide(100);
+function hideCreationMenu(event) {
+  // If the clicked element is not the menu
+  if (!$(event.target).parents(".creation-menu").length > 0) {   
+    $(".creation-menu").hide(100);
+  }
+}
+
+function createStatus(event, type) {
+  console.log("TODO");
+}
+
+function drowStatus(status) {
+  status.type = 'event'; // XXX: hotfix, waiting for field "type" at backend.
+  map.addMarker({
+    lat: status.latitude,
+    lng: status.longitude,
+    title: status.name,
+    icon: "static/images/" + status.type + ".png",
+    click: function(e) {
+      alert(status.text);
     }
+  });
+}
+
+function init() {
+  Status.query().then((response) => {
+    statuses = response.body;
+    for (var i = 0; i < statuses.length; i++) {
+      drowStatus(statuses[i]);
+    }
+  });
+}
+
+GMaps.on('rightclick', map.map, function(event) {
+  showCreationMenu(event);
 });
 
-// map.addMarker({
-//   lat: 50.4501,
-//   lng: 30.5234,
-//   title: 'Lima',
-//   icon: "static/images/burger.png",
-//   click: function(e) {
-//     alert('You clicked in this marker');
-//   }
-// });
+$(document).bind("mousedown", function (event) {
+  hideCreationMenu(event)
+});
 
-
-// map.setContextMenu({
-//   control: 'map',
-//   options: [{
-//     title: 'Add marker',
-//     name: 'add_marker',
-//     action: function(e) {
-//       this.addMarker({
-//         lat: e.latLng.lat(),
-//         lng: e.latLng.lng(),
-//         title: 'New marker'
-//       });
-//     }
-//   }, {
-//     title: 'Center here',
-//     name: 'center_here',
-//     action: function(e) {
-//       this.setCenter(e.latLng.lat(), e.latLng.lng());
-//     }
-//   }]
-// });
+init();

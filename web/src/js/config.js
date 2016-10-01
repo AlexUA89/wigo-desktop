@@ -1,7 +1,7 @@
 config = {};
 
 config.LATITUDE = 50.4501;
-config.LONGTITUDE = 30.5234;
+config.LONGITUDE = 30.5234;
 config.vue = new Vue({
   el: '#app',
   data: {

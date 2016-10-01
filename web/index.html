@@ -16,7 +16,7 @@
       width: 100%;
       height: 500px;
     }
-    .custom-menu {
+    .creation-menu {
       display: none;
       z-index: 1000;
       position: absolute;
@@ -26,14 +26,19 @@
       font-family: sans-serif;
       background: #FFF;
       color: #333;
-      border-radius: 5px;
+      border-radius: 10px 10px 10px 0px;
     }
-    .custom-menu li {
-      padding: 8px 12px;
+    .creation-menu div {
       cursor: pointer;
     }
-    .custom-menu li:hover {
+    .creation-menu div:hover {
       background-color: #DEF;
+    }
+    .creation-menu img {
+      vertical-align: middle;
+    }
+    .creation-menu span {
+      padding: 10px;
     }
   </style>
 </head>
@@ -41,15 +46,14 @@
   <!-- main part -->
   <h1>{{ message }}</h1>
   <div id="map"></div>
-  <!-- invisible elements -->
-  <ul class='custom-menu'>
-    <li data-action="first">First thing</li>
-    <li data-action="second">Second thing</li>
-    <li data-action="third">Third thing</li>
-  </ul>
+  <!-- invisible context menu -->
+  <div class='creation-menu'>
+    <div data-action="add-event"><img  src="static/images/event.png"/><span>New Event</span></div>
+    <div data-action="add-chat"><img src="static/images/chat.png"/><span>New Chat</span></div>
+  </div>
   <!-- js imports -->
   <script src="static/src/js/config.js"></script>
-  <script src="static/src/js/event.js"></script>
+  <script src="static/src/js/status.js"></script>
   <script src="static/src/js/map.js"></script>
 </body>
 </html>
