@@ -38,7 +38,8 @@ def get_events(request_count=5):
         for _ in range(request_count):
             response = requests.get(URL, params=params)
             response_json = response.json()
-            data = response_json['data']
+            data = response_json.get('data')
+            print response.request.url
             if not data:
                 break
             print '  Successfully downloaded %s events from %s' % (len(data), response.request.url)
