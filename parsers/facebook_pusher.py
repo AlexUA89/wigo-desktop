@@ -8,10 +8,10 @@ import requests
 DATA_PATH = os.path.join('data')
 # parsed data file name
 # FILE_NAME = 'facebook.json'
-FILE_NAME = 'bigcityevent_full.json'
+FILE_NAME = 'fb_events.json'
 CACHE_FILE_NAME = '~facebook_pushed_events.json'
 # WIGO domain
-DOMAIN = 'http://46.101.106.144:8080/wigo-server/'
+DOMAIN = 'http://54.208.250.42:8080/wigo-server/'
 # WIGO status URL
 STATUS_URL = 'api/status'
 # WIGO token
@@ -23,11 +23,11 @@ with open(os.path.join('tokens', 'wigo_token.txt'), 'r') as f:
 
 DEFAULT_HEADERS = {
     'Content-Type': 'application/json',
-    'Authorization': 'bearer eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJ3aWdvLmNvbSIsInN1Y'
-                     'iI6IjM0NjVhZWQxLTE4ZGQtNGI4My1iMzM3LTAyOThkZDU5NzkzYSIsIm'
-                     'lhdCI6MTQ3ODM2ODMwMCwiZXhwIjoxNDgwOTYwMzAwfQ.2faOQru9B9L9'
-                     '7zqMcJ1fZu2Oa7LbaaCU_Stk3NxoV2nr7UIKqp5E8ySW6L7kidpBW-VVe'
-                     'RfTgllfp4yDc6Nn9A',
+    'Authorization': 'bearer eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJ3aWdvLmNvbSIsInN1'
+                     'YiI6ImY5MDg4NTRiLTkzZjUtNDhiYy05MjEzLTdhYmNiMTE2OWQ0OCIsI'
+                     'mlhdCI6MTQ4MDE1NTcxMiwiZXhwIjoxNDgyNzQ3NzEyfQ.jNOvWbdjzzE'
+                     '2uNcTDR0j4rLLrgH0OIhMtwRIkId5LiO_aoEIstNncaoUJtQCALQFSqT5'
+                     'piSUpBjB05-Vt0I13w',
 }
 
 with open(os.path.join(DATA_PATH, FILE_NAME), 'r') as f:
@@ -67,12 +67,15 @@ def push_event(event):
         "text": event.get('description', ''),
         "kind": "event",
         "userId": USER_ID,
+        "url": event['url'],
     }
+    print USER_ID
     if event.get('tags') and event.get('tags')[0]:
-        data['tags'] = event.get('tags')
+        data['hashtags'] = event.get('tags')
     response = requests.post(url, data=json.dumps(data), headers=DEFAULT_HEADERS)
     if response.status_code != 200:
         raise Exception('Failed to push data: %s, response data: %s' % (data, response))
+    print response.json()
     print 'Event "%s" has been pushed to server.' % str(event['id'])
     print '--------' * 20
 
@@ -87,8 +90,6 @@ def read_unicode(text, charset='utf-8'):
 for event in events:
     if not event.get('id'):
         print 'ERROR! Event without ID.', event
-        continue
-    if event['id'] in pushed_events_ids:
         continue
     push_event(event)
     pushed_events_ids.append(event['id'])
