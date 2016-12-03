@@ -4,7 +4,7 @@
     <div class="header">
       <div class="logo"><img src="./assets/logo-small.png"/></div>
       <div class="filters">
-        <input class="search" type="text" placeholder="Search..">
+        <w-search></w-search>
       </div>
     </div>
     <div class="map"><w-map :statuses="statuses"></w-map></div>
@@ -15,6 +15,7 @@
   import backend from './services/backend';
   import WMap from './components/WMap';
   import WStatus from './components/WStatus';
+  import WSearch from './components/WSearch';
 
   export default {
     name: 'app',
@@ -29,6 +30,7 @@
     components: {
       'w-map': WMap,
       'w-status': WStatus,
+      'w-search': WSearch,
     },
   };
 </script>
@@ -50,17 +52,6 @@
   .filters {
     height: 50px;
     width: calc(100% - 250px);
-  }
-  .search {
-    padding: 10px;
-    border: none;
-    border-bottom: solid 2px #c9c9c9;
-    transition: border 0.3s;
-    width:250px;
-  }
-  .search:focus,
-  .search.focus {
-    border-bottom: solid 2px #969696;
   }
   .map {
     width: 100%;

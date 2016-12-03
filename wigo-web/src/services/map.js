@@ -13,9 +13,9 @@ function drawStatus(status) {
     lng: status.longitude,
     title: status.name,
     icon,
-    infoWindow: {
-      content: 'Some text',
-    },
+    // infoWindow: {
+    //   content: status.,
+    // },
   };
 
   map.addMarker(marker);
