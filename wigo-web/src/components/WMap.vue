@@ -21,9 +21,6 @@
 
   export default {
     props: ['statuses'],
-    data() {
-      return {};
-    },
     directives: {
       map: mapDirective,
       status: statusDirective,

@@ -12,23 +12,18 @@
 </template>
 
 <script>
+  import backend from './services/backend';
   import WMap from './components/WMap';
   import WStatus from './components/WStatus';
-
-  const statuses = [
-    {
-      name: 'test status',
-      latitude: 50.4501,
-      longitude: 30.5234,
-    },
-  ];
 
   export default {
     name: 'app',
     data() {
-      console.log(statuses);
+      const vm = this;
+      function success(response) { vm.statuses = response.body; }
+      backend.getStatuses.then(success);
       return {
-        statuses,
+        statuses: vm.statuses,
       };
     },
     components: {
