@@ -5,6 +5,7 @@ import config from '../config';
 const icon = require('../assets/event.png');
 
 let map = null;
+const markersMap = {};
 const statuses = [];
 
 function drawStatus(status) {
@@ -18,6 +19,7 @@ function drawStatus(status) {
     // },
   };
 
+  markersMap[status.id] = marker;
   map.addMarker(marker);
 }
 
@@ -34,5 +36,9 @@ export default {
   addStatus(newStatus) {
     statuses.push(newStatus);
     if (map !== null) drawStatus(newStatus);
+  },
+
+  clearAllStatuses() {
+    map.removeMarkers();
   },
 };

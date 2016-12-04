@@ -4,7 +4,7 @@
     <div class="header">
       <div class="logo"><img src="./assets/logo-small.png"/></div>
       <div class="filters">
-        <w-search></w-search>
+        <w-search v-on:search="executeSearch"></w-search>
       </div>
     </div>
     <div class="map"><w-map :statuses="statuses"></w-map></div>
@@ -20,17 +20,26 @@
   export default {
     name: 'app',
     data() {
-      const vm = this;
-      function success(response) { vm.statuses = response.body; }
-      backend.getStatuses.then(success);
+      this.statuses = [];
+      backend.getStatuses().then(response => this.updateStatuses(response.body));
       return {
-        statuses: vm.statuses,
+        statuses: this.statuses,
+        message: '',
       };
     },
     components: {
       'w-map': WMap,
       'w-status': WStatus,
       'w-search': WSearch,
+    },
+    methods: {
+      executeSearch(searchQuery) {
+        console.log(`${searchQuery} - execuring search`);
+        backend.searchStatuses(searchQuery).then(response => this.updateStatuses(response.body));
+      },
+      updateStatuses(newStatuses) {
+        this.statuses = newStatuses;
+      },
     },
   };
 </script>

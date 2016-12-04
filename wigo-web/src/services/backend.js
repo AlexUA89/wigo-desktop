@@ -8,7 +8,15 @@ Vue.use(VueResource);
 Vue.http.options.root = config.api_root;
 Vue.http.headers.common['Access-Control-Allow-Origin'] = config.api_cors;
 
-const statusListURL = 'status';
+function updateQueryStringParameter(uri, key, value) {
+  const re = new RegExp(`([?&])${key}=.*?(&|$)`, 'i');
+  const separator = uri.indexOf('?') !== -1 ? '&' : '?';
+  if (uri.match(re)) return uri.replace(re, `$1${key}=${value}$2`);
+  return `${uri}${separator}${key}=${value}`;
+}
+
+
+let statusListURL = 'status';
 const options = {};
 
 // let statuses = [];
@@ -27,5 +35,11 @@ const options = {};
 
 
 export default {
-  getStatuses: Vue.http.get(statusListURL, [options]),
+  getStatuses() {
+    return Vue.http.get(statusListURL, [options]);
+  },
+  searchStatuses(searchQuery) {
+    statusListURL = updateQueryStringParameter(statusListURL, 'search', searchQuery);
+    return Vue.http.get(statusListURL, [options]);
+  },
 };

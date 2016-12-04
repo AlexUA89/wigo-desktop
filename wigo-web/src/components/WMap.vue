@@ -1,7 +1,5 @@
 <template>
-  <div class="map" v-map>
-    <div v-for="status in statuses" v-status="status"></div>  
-  </div>
+  <div class="map" v-map="statuses"></div>
 </template>
 
 <script>
@@ -10,6 +8,10 @@
   const mapDirective = {
     inserted(el) {
       map.init(el);
+    },
+    componentUpdated(el, binding) {
+      map.clearAllStatuses();
+      for (let i = 0; i < binding.value.length; i += 1) { map.addStatus(binding.value[i]); }
     },
   };
 

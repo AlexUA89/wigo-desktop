@@ -1,11 +1,27 @@
 <template>
   <div>
-    <input class="search" type="text" placeholder="Search.."/>
-    <button type="button" class="btn btn-default">
+    <input class="search" type="text" placeholder="Search.." v-model="searchQuery">
+    <button type="button" class="btn btn-default" v-on:click="search">
       <i class="fa fa-search" aria-hidden="true"></i>
     </button>
   </div>
 </template>
+
+<script>
+  export default {
+    data() {
+      console.log('Search initialized');
+      return {
+        searchQuery: '',
+      };
+    },
+    methods: {
+      search() {
+        this.$emit('search', this.searchQuery);
+      },
+    },
+  };
+</script>
 
 <style scoped>
   .search {
