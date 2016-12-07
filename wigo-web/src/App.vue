@@ -4,7 +4,7 @@
     <div class="header">
       <div class="logo"><img src="./assets/logo-small.png"/></div>
       <div class="filters">
-        <w-search v-on:search="executeSearch"></w-search>
+        <w-filters v-on:fts="executeFTS" v-on:daterange="executeDaterangeSearch"></w-search>
       </div>
     </div>
     <div class="map"><w-map :statuses="statuses"></w-map></div>
@@ -15,7 +15,7 @@
   import backend from './services/backend';
   import WMap from './components/WMap';
   import WStatus from './components/WStatus';
-  import WSearch from './components/WSearch';
+  import WFilters from './components/WFilters';
 
   export default {
     name: 'app',
@@ -30,12 +30,14 @@
     components: {
       'w-map': WMap,
       'w-status': WStatus,
-      'w-search': WSearch,
+      'w-filters': WFilters,
     },
     methods: {
-      executeSearch(searchQuery) {
-        console.log(`${searchQuery} - execuring search`);
-        backend.searchStatuses(searchQuery).then(response => this.updateStatuses(response.body));
+      executeFTS(ftsQuery) {
+        backend.search(ftsQuery).then(response => this.updateStatuses(response.body));
+      },
+      executeDaterangeSearch(startDate, endDate) {
+        backend.setDaterange(startDate, endDate).then(response => this.updateStatuses(response.body));
       },
       updateStatuses(newStatuses) {
         this.statuses = newStatuses;

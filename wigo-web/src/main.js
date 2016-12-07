@@ -1,3 +1,7 @@
+// allow to use jquery everywhere
+// import 'expose?$!expose?jQuery!jquery';
+// import 'expose?moment!moment';
+
 import Vue from 'vue';
 import App from './App';
 

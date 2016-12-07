@@ -15,9 +15,13 @@ function updateQueryStringParameter(uri, key, value) {
   return `${uri}${separator}${key}=${value}`;
 }
 
-
-let statusListURL = 'status';
-const options = {};
+const datetimeFormat = 'YYYY-MM-DDTHH:mm:ss[Z]';
+const statusListURL = 'status';
+const statusListQueryParams = {
+  startDate: config.filtersDefaults.startDate.format(datetimeFormat),
+  endDate: config.filtersDefaults.endDate.format(datetimeFormat),
+  search: null,
+};
 
 // let statuses = [];
 
@@ -36,10 +40,22 @@ const options = {};
 
 export default {
   getStatuses() {
-    return Vue.http.get(statusListURL, [options]);
+    let url = statusListURL;
+    function update(param, value) {
+      if (value) url = updateQueryStringParameter(url, param, value);
+    }
+    Object.entries(statusListQueryParams).map(entry => update(...entry));
+    return Vue.http.get(url);
   },
-  searchStatuses(searchQuery) {
-    statusListURL = updateQueryStringParameter(statusListURL, 'search', searchQuery);
-    return Vue.http.get(statusListURL, [options]);
+  search(searchQuery) {
+    statusListQueryParams.search = searchQuery;
+    return this.getStatuses();
+  },
+  setDaterange(startDate, endDate) {
+    statusListQueryParams.startDate = startDate.format(datetimeFormat);
+    statusListQueryParams.endDate = endDate.format(datetimeFormat);
+    console.log(startDate);
+    console.log(endDate);
+    return this.getStatuses();
   },
 };

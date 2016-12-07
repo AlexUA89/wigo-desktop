@@ -5,6 +5,7 @@ import config from '../config';
 const icon = require('../assets/event.png');
 
 let map = null;
+let onMarkerClick = null;
 const markersMap = {};
 const statuses = [];
 
@@ -14,9 +15,7 @@ function drawStatus(status) {
     lng: status.longitude,
     title: status.name,
     icon,
-    // infoWindow: {
-    //   content: status.,
-    // },
+    click: onMarkerClick,
   };
 
   markersMap[status.id] = marker;
@@ -32,13 +31,10 @@ export default {
     });
     for (let i = 0; i < statuses.length; i += 1) drawStatus(statuses[i]);
   },
-
   addStatus(newStatus) {
     statuses.push(newStatus);
     if (map !== null) drawStatus(newStatus);
   },
-
-  clearAllStatuses() {
-    map.removeMarkers();
-  },
+  clearAllStatuses() { map.removeMarkers(); },
+  setClickCallback(callback) { onMarkerClick = callback; },
 };

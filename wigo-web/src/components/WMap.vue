@@ -15,17 +15,10 @@
     },
   };
 
-  const statusDirective = {
-    inserted(el, binding) {
-      map.addStatus(binding.value);
-    },
-  };
-
   export default {
     props: ['statuses'],
     directives: {
       map: mapDirective,
-      status: statusDirective,
     },
   };
 </script>
