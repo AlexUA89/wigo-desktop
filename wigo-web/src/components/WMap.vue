@@ -1,5 +1,8 @@
 <template>
-  <div class="map" v-map="statuses"></div>
+  <div class="w-container">
+    <div class="loader" v-show="loading"><img src="../assets/map-loading.gif"/></div>
+    <div class="map" v-map="statuses"></div>
+  </div>
 </template>
 
 <script>
@@ -11,12 +14,12 @@
     },
     componentUpdated(el, binding) {
       map.clearAllStatuses();
-      for (let i = 0; i < binding.value.length; i += 1) { map.addStatus(binding.value[i]); }
+      binding.value.forEach(status => map.addStatus(status));
     },
   };
 
   export default {
-    props: ['statuses'],
+    props: ['statuses', 'loading'],
     directives: {
       map: mapDirective,
     },
@@ -24,8 +27,19 @@
 </script>
 
 <style scoped>
-  .map {
+  .map, .loader, .w-container {
     width: 100%;
     height: 100%;
+  }
+  .loader {
+    height: calc(100% - 50px);  /* hack, should be corrected */
+    background-color: rgba(200, 200, 200, .5);
+    position: absolute;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .loader {
+    z-index: 1;
   }
 </style>

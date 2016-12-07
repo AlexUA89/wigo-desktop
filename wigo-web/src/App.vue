@@ -7,7 +7,7 @@
         <w-filters v-on:fts="executeFTS" v-on:daterange="executeDaterangeSearch"></w-search>
       </div>
     </div>
-    <div class="map"><w-map :statuses="statuses"></w-map></div>
+    <div class="map"><w-map :statuses="statuses" :loading="loading"></w-map></div>
   </div>
 </template>
 
@@ -21,10 +21,11 @@
     name: 'app',
     data() {
       this.statuses = [];
+      this.loading = true;
       backend.getStatuses().then(response => this.updateStatuses(response.body));
       return {
         statuses: this.statuses,
-        message: '',
+        loading: this.loading,
       };
     },
     components: {
@@ -34,12 +35,15 @@
     },
     methods: {
       executeFTS(ftsQuery) {
+        this.loading = true;
         backend.search(ftsQuery).then(response => this.updateStatuses(response.body));
       },
       executeDaterangeSearch(startDate, endDate) {
+        this.loading = true;
         backend.setDaterange(startDate, endDate).then(response => this.updateStatuses(response.body));
       },
       updateStatuses(newStatuses) {
+        this.loading = false;
         this.statuses = newStatuses;
       },
     },
