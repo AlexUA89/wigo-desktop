@@ -23,6 +23,14 @@
     directives: {
       map: mapDirective,
     },
+    methods: {
+      selectStatus(status) {
+        this.$emit('statusSelected', status);
+      },
+    },
+    mounted() {
+      this.$nextTick(() => map.setClickCallback(this.selectStatus));
+    },
   };
 </script>
 
@@ -38,8 +46,6 @@
     display:flex;
     align-items:center;
     justify-content:center;
-  }
-  .loader {
     z-index: 1;
   }
 </style>

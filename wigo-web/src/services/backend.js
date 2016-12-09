@@ -23,21 +23,6 @@ const statusListQueryParams = {
   search: null,
 };
 
-// let statuses = [];
-
-// function successCallback(response) {
-//   console.log('Success Callback');
-//   statuses = response.body;
-// }
-
-// function errorCallback(response) {
-//   console.log('Error happened. Failed to get response from backend.');
-//   console.log(response);
-// }
-
-// Vue.http.get(statusListURL, [options]).then(successCallback, errorCallback);
-
-
 export default {
   getStatuses() {
     let url = statusListURL;
@@ -54,8 +39,9 @@ export default {
   setDaterange(startDate, endDate) {
     statusListQueryParams.startDate = startDate.format(datetimeFormat);
     statusListQueryParams.endDate = endDate.format(datetimeFormat);
-    console.log(startDate);
-    console.log(endDate);
     return this.getStatuses();
+  },
+  getStatusDetails(id) {
+    return Vue.http.get(`${statusListURL}/${id}`);
   },
 };

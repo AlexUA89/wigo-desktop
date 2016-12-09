@@ -7,7 +7,13 @@
         <w-filters v-on:fts="executeFTS" v-on:daterange="executeDaterangeSearch"></w-search>
       </div>
     </div>
-    <div class="map"><w-map :statuses="statuses" :loading="loading"></w-map></div>
+    <div class="map" v-bind:class="{shortened: selectedStatus}">
+      <w-map :statuses="statuses" 
+             :loading="loading" 
+             v-on:statusSelected="showSelectedStatus">
+      </w-map>
+    </div>
+    <div class="selected-status" v-show="selectedStatus"></div>
   </div>
 </template>
 
@@ -22,10 +28,12 @@
     data() {
       this.statuses = [];
       this.loading = true;
+      this.selectedStatus = null;
       backend.getStatuses().then(response => this.updateStatuses(response.body));
       return {
         statuses: this.statuses,
         loading: this.loading,
+        selectedStatus: this.selectedStatus,
       };
     },
     components: {
@@ -45,6 +53,9 @@
       updateStatuses(newStatuses) {
         this.loading = false;
         this.statuses = newStatuses;
+      },
+      showSelectedStatus(status) {
+        this.selectedStatus = status;
       },
     },
   };
@@ -71,5 +82,15 @@
   .map {
     width: 100%;
     height: calc(100vh - 50px);
+    float: left;
+  }
+  .map.shortened {
+    width: calc(100% - 350px);
+  }
+  .selected-status {
+    width: 350px;
+    height: calc(100vh - 50px);
+    float: right;
+    background: cornflowerblue;
   }
 </style>
