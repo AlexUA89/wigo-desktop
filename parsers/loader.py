@@ -156,7 +156,7 @@ class FBLoader(object):
 
     def load(self):
         self.events = []
-        valid_bce_events = [e for e in bce_events if self._is_valid(e)]
+        valid_bce_events = [e for e in self.bce_events if self._is_valid(e)]
         for index, bce_event in enumerate(valid_bce_events):
             print 'Event %s from %s' % (index, len(valid_bce_events))
             event = self._load_from_facebook(bce_event)
