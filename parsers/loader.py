@@ -9,6 +9,10 @@ import websocket
 DATA_PATH = 'data'
 TOKENS_PATH = 'tokens'
 
+# preparation
+if not os.path.exists(DATA_PATH):
+    os.mkdir(DATA_PATH)
+
 
 def datetime_to_timestamp(dt):
     return int(time.mktime(dt.timetuple()))
