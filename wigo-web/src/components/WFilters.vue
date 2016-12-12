@@ -1,5 +1,14 @@
 <template>
   <div>
+    <!-- use the modal component, pass in the prop -->
+    <w-modal v-if="showModal" @close="showModal = false">
+      <!--
+        you can use custom content here to overwrite
+        default content
+      -->
+      <h3 slot="header">custom header</h3>
+    </w-modal>
+    <input class="category" @click="showModal = true">
     <input class="daterange" type="text" name="datefilter">
     <input class='fts' type='text' placeholder='Search..' v-model='ftsQuery'>
     <button type='button' class='btn btn-default' v-on:click='fts'>
@@ -12,6 +21,7 @@
   /* global $ */
   /* global moment */
   import config from '../config';
+  import WModal from './WModal';
 
   const defaults = config.filtersDefaults;
   const dateFormat = 'MM/DD/YYYY';
@@ -38,6 +48,7 @@
     data() {
       return {
         ftsQuery: '',
+        showModal: false,
       };
     },
     methods: {
@@ -54,24 +65,26 @@
     mounted() {
       this.$nextTick(() => $('.daterange').daterangepicker(daterangeConfig, this.daterange));
     },
+    components: {
+      'w-modal': WModal,
+    },
   };
 </script>
 
 <style scoped>
-  .fts, .daterange {
+  .category, .daterange, .fts {
     display: inline;
     padding: 10px;
     border: none;
     border-bottom: solid 2px #c9c9c9;
     transition: border 0.3s;
-  }
-  .daterange {
     width: 180px;
   }
-  .fts {
-    width: 250px;
+  .daterange, .fts {
     margin-left: 20px;
   }
+  .category:focus,
+  .category.focus,
   .daterange:focus,
   .daterange.focus,
   .fts:focus,

@@ -2,6 +2,7 @@
   <div class="w-container">
     <div class="loader" v-show="loading"><img src="../assets/map-loading.gif"/></div>
     <div class="map" v-map="statuses"></div>
+
   </div>
 </template>
 

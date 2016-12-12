@@ -7,13 +7,17 @@
         <w-filters v-on:fts="executeFTS" v-on:daterange="executeDaterangeSearch"></w-search>
       </div>
     </div>
+    
     <div class="map" v-bind:class="{shortened: selectedStatus}">
       <w-map :statuses="statuses" 
              :loading="loading" 
              v-on:statusSelected="showSelectedStatus">
       </w-map>
     </div>
-    <div class="selected-status" v-show="selectedStatus"></div>
+    
+    <div class="selected-status" v-show="selectedStatus">
+       <w-status :status="selectedStatus"></w-status>
+    </div>
   </div>
 </template>
 
@@ -60,6 +64,8 @@
     },
   };
 </script>
+
+
 
 <style scoped>
   .header {
