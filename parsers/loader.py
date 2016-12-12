@@ -145,7 +145,7 @@ class FBLoader(object):
     """ Loads events additional details from facebook based """
     FB_PREFIX = 'https://www.facebook.com/events/'
     URL = 'https://graph.facebook.com/v2.7/'
-    FIELDS = ['name', 'description', 'id', 'place', 'end_time', 'start_time']
+    FIELDS = ['name', 'description', 'id', 'place', 'end_time', 'start_time', 'photos.fields(source)']
     TOKEN_FILE = 'facebook_token.txt'
     FILE_NAME = 'fb_events.json'
 
