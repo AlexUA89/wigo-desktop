@@ -4,7 +4,10 @@
     <div class="header">
       <div class="logo"><img src="./assets/logo-small.png"/></div>
       <div class="filters">
-        <w-filters v-on:fts="executeFTS" v-on:daterange="executeDaterangeSearch"></w-search>
+        <w-filters v-on:fts="executeFTS" 
+                   v-on:daterange="executeDaterangeSearch"
+                   v-on:categories="executeCategoriesSearch">
+        </w-search>
       </div>
     </div>
     
@@ -54,13 +57,19 @@
         this.loading = true;
         backend.setDaterange(startDate, endDate).then(response => this.updateStatuses(response.body));
       },
+      executeCategoriesSearch(categories) {
+        this.loading = true;
+        const names = [];
+        categories.forEach(category => names.push(category.name.toUpperCase()));
+        backend.setCategories(names).then(response => this.updateStatuses(response.body));
+      },
       updateStatuses(newStatuses) {
         this.loading = false;
         this.statuses = newStatuses;
       },
       showSelectedStatus(status) {
         this.selectedStatus = status;
-      },
+      }
     },
   };
 </script>
@@ -87,7 +96,7 @@
   }
   .map {
     width: 100%;
-    height: calc(100vh - 50px);
+    height: calc(100vh - 60px);
     float: left;
   }
   .map.shortened {

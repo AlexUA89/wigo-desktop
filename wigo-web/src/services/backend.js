@@ -49,6 +49,7 @@ const statusListQueryParams = {
   startDate: config.filtersDefaults.startDate.format(datetimeFormat),
   endDate: config.filtersDefaults.endDate.format(datetimeFormat),
   search: null,
+  categories: null,
 };
 
 export default {
@@ -69,10 +70,17 @@ export default {
     statusListQueryParams.endDate = endDate.format(datetimeFormat);
     return this.getStatuses();
   },
+  setCategories(categories) {
+    statusListQueryParams.categories = categories.join(',');
+    return this.getStatuses();
+  },
   getStatusDetails(id) {
     return Vue.http.get(`${statusListURL}/${id}`);
   },
   getStatusIcon(status) {
     return icons[status.category.toLowerCase()] || icons.other;
+  },
+  getAllIcons() {
+    return icons;
   },
 };

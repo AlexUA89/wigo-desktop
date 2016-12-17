@@ -41,7 +41,7 @@
     height: 100%;
   }
   .loader {
-    height: calc(100% - 50px);  /* hack, should be corrected */
+    height: calc(100% - 70px);  /* hack, should be corrected */
     background-color: rgba(200, 200, 200, .5);
     position: absolute;
     display:flex;
