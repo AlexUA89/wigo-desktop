@@ -37,6 +37,7 @@ export default {
     statuses.push(newStatus);
     if (map !== null) drawStatus(newStatus);
   },
+  setCenter(status) { map.setCenter(status.latitude, status.longitude); },
   clearAllStatuses() { map.removeMarkers(); },
   setClickCallback(callback) { onMarkerClick = callback; },
 };

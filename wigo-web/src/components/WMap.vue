@@ -1,8 +1,7 @@
 <template>
   <div class="w-container">
     <div class="loader" v-show="loading"><img src="../assets/map-loading.gif"/></div>
-    <div class="map" v-map="statuses"></div>
-
+    <div class="map" v-map="{ statuses: statuses, selected: selected }"></div>
   </div>
 </template>
 
@@ -15,12 +14,13 @@
     },
     componentUpdated(el, binding) {
       map.clearAllStatuses();
-      binding.value.forEach(status => map.addStatus(status));
+      binding.value.statuses.forEach(status => map.addStatus(status));
+      if (binding.value.selected !== null) { map.setCenter(binding.value.selected); }
     },
   };
 
   export default {
-    props: ['statuses', 'loading'],
+    props: ['statuses', 'loading', 'selected'],
     directives: {
       map: mapDirective,
     },

@@ -1,5 +1,7 @@
 <template>
+
   <div class="main" v-if="status">
+    <!-- short version -->
     <div class="main-image">
       <img :src="getMainImage(status)"/>
     </div>
@@ -11,8 +13,15 @@
       <div class="category-name">{{ status.category }}</div>
       <div class="dates">{{ getStatusDate(status) }}</div>
     </div>
-    <div class="text">{{ status.text }}</div>
+    <div class="text">{{ status.text.slice(0, 450) }}...</div>
+    <div class="showDetails"><button class="btn btn-success">Show details</button></div>
+
+    <!-- modal window with details -->
+    <w-modal v-if="showModal">
+      <h4 class="categories-select-modal" slot="header">Categories</h4>
+    </w-modal>
   </div>
+
 </template>
 
 <script>
@@ -26,7 +35,6 @@
     methods: {
       getStatusIcon: backend.getStatusIcon,
       getStatusDate(status) {
-        console.log(status.images);
         const format = 'MMM Do HH:mm';
         const start = moment(status.startDate).format(format);
         const end = moment(status.endDate).format(format);
@@ -40,7 +48,7 @@
 </script>
 
 <style scoped>
-  .main, .header, .main-image, .text, .details {
+  .main, .header, .main-image, .text, .details, .showDetails {
     width: 100%;
   }
   .header {
@@ -88,9 +96,16 @@
   .text {
     padding-left: 5px;
     padding-right: 5px;
-    height: calc(100vh - 310px);
+    height: calc(100vh - 390px);
     background: white;
     overflow-y: auto;
     text-align: justify;
+  }
+  .showDetails {
+    background: white;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 </style>

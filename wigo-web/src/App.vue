@@ -2,7 +2,7 @@
 <template>
   <div id="app">
     <div class="header">
-      <div class="logo"><img src="./assets/logo-small.png"/></div>
+      <div class="logo"><img src="./assets/logo.png"/></div>
       <div class="filters">
         <w-filters v-on:fts="executeFTS" 
                    v-on:daterange="executeDaterangeSearch"
@@ -13,7 +13,8 @@
     
     <div class="map" v-bind:class="{shortened: selectedStatus}">
       <w-map :statuses="statuses" 
-             :loading="loading" 
+             :loading="loading"
+             :selected="selectedStatus"
              v-on:statusSelected="showSelectedStatus">
       </w-map>
     </div>
@@ -29,6 +30,7 @@
   import WMap from './components/WMap';
   import WStatus from './components/WStatus';
   import WFilters from './components/WFilters';
+  import utils from './utils';
 
   export default {
     name: 'app',
@@ -36,6 +38,8 @@
       this.statuses = [];
       this.loading = true;
       this.selectedStatus = null;
+      const queryString = utils.getQueryString();
+      if (Object.prototype.hasOwnProperty.call(queryString, 'id')) this.showSelectedStatus({ id: queryString.id });
       backend.getStatuses().then(response => this.updateStatuses(response.body));
       return {
         statuses: this.statuses,
@@ -68,8 +72,9 @@
         this.statuses = newStatuses;
       },
       showSelectedStatus(status) {
-        this.selectedStatus = status;
-      }
+        utils.addToCurrentLocation('id', status.id);
+        backend.getStatusDetails(status.id).then(response => (this.selectedStatus = response.body));
+      },
     },
   };
 </script>

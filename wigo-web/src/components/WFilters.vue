@@ -43,11 +43,9 @@
 <script>
   /* global $ */
   /* global moment */
-  import config from '../config';
   import backend from '../services/backend';
   import WModal from './WModal';
 
-  const defaults = config.filtersDefaults;
   const dateFormat = 'MM/DD/YYYY';
   const daterangeConfig = {
     ranges: {
@@ -60,8 +58,8 @@
       ],
     },
     alwaysShowCalendars: true,
-    startDate: defaults.startDate.format(dateFormat),
-    endDate: defaults.endDate.format(dateFormat),
+    startDate: moment(backend.statusListQueryParams.startDate).format(dateFormat),
+    endDate: moment(backend.statusListQueryParams.endDate).format(dateFormat),
     minDate: moment().format(dateFormat),
     maxDate: moment().add(1, 'months').format(dateFormat),
     opens: 'center',
@@ -88,11 +86,10 @@
   export default {
     data() {
       this.categories = [];
-      this.showModal = false;
-      const icons = backend.getAllIcons();
+      const icons = backend.getSelectedIcons();
       Object.keys(icons).map(key => this.categories.push(new Category(key, icons[key], true)));
       return {
-        ftsQuery: '',
+        ftsQuery: backend.statusListQueryParams.search || '',
         showModal: false,
         categories: this.categories,
       };
