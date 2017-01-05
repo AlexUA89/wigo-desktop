@@ -106,4 +106,8 @@ export default {
     return selectedIcons;
   },
   statusListQueryParams,
+  getStatusComments(status) {
+    console.log('QQQ');
+    return Vue.http.get(`${statusListURL}/${status.id}/messages`);
+  },
 };

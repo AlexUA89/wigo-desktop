@@ -1,6 +1,7 @@
 <!-- This file construct whole application together -->
 <template>
   <div id="app">
+
     <div class="header">
       <div class="logo"><img src="./assets/logo.png"/></div>
       <div class="filters">
@@ -11,13 +12,15 @@
       </div>
     </div>
     
-    <div class="map" v-bind:class="{shortened: selectedStatus}">
+    <w-login></w-login>
+
+<!--     <div class="map" v-bind:class="{shortened: selectedStatus}">
       <w-map :statuses="statuses" 
              :loading="loading"
              :selected="selectedStatus"
              v-on:statusSelected="showSelectedStatus">
       </w-map>
-    </div>
+    </div> -->
     
     <div class="selected-status" v-show="selectedStatus">
        <w-status :status="selectedStatus"></w-status>
@@ -30,6 +33,7 @@
   import WMap from './components/WMap';
   import WStatus from './components/WStatus';
   import WFilters from './components/WFilters';
+  import WLogin from './components/WLogin';
   import utils from './utils';
 
   export default {
@@ -51,6 +55,7 @@
       'w-map': WMap,
       'w-status': WStatus,
       'w-filters': WFilters,
+      'w-login': WLogin,
     },
     methods: {
       executeFTS(ftsQuery) {
@@ -111,6 +116,5 @@
     width: 350px;
     height: calc(100vh - 50px);
     float: right;
-    background: cornflowerblue;
   }
 </style>
