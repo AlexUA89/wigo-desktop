@@ -1,12 +1,16 @@
 <template>
   <div class="w-container">
     <div class="loader" v-show="loading"><img src="../assets/map-loading.gif"/></div>
+    <div class="loader map"><img src="../assets/map-loading.gif"/></div>
     <div class="map" v-map="{ statuses: statuses, selected: selected }"></div>
   </div>
 </template>
 
 <script>
+  /* global google */
   import map from '../services/map';
+
+  console.log(typeof google === 'object' && typeof google.maps === 'object');
 
   const mapDirective = {
     inserted(el) {
@@ -48,5 +52,8 @@
     align-items:center;
     justify-content:center;
     z-index: 1;
+  }
+  .loader.map {
+    z-index: -1;
   }
 </style>

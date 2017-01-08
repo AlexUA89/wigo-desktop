@@ -107,7 +107,17 @@ export default {
   },
   statusListQueryParams,
   getStatusComments(status) {
-    console.log('QQQ');
     return Vue.http.get(`${statusListURL}/${status.id}/messages`);
+  },
+  getUserDetails(token) {
+    return Vue.http.post('login', { fbToken: token });
+  },
+  postStatusComment(status, commentText, profile) {
+    console.log({ message: commentText, userId: profile.id });
+    return Vue.http.post(
+      `${statusListURL}/${status.id}/messages`,
+      { message: commentText, userId: profile.id },
+      { headers: { Authorization: `bearer ${profile.token}` } },
+    );
   },
 };

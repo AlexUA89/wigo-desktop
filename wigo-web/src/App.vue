@@ -10,34 +10,39 @@
                    v-on:categories="executeCategoriesSearch">
         </w-search>
       </div>
+      <div class="profile">
+        <span v-if="profile.activated">{{ profile.nickname }} (<a @click="logout">Logout</a>)</span>
+        <span v-else>Not authenticated (<a @click="login">Login</a>)</span>
+      </div>
     </div>
-    
-    <w-login></w-login>
 
-<!--     <div class="map" v-bind:class="{shortened: selectedStatus}">
+    <div class="map" v-bind:class="{shortened: selectedStatus}">
       <w-map :statuses="statuses" 
              :loading="loading"
              :selected="selectedStatus"
              v-on:statusSelected="showSelectedStatus">
       </w-map>
-    </div> -->
+    </div>
     
     <div class="selected-status" v-show="selectedStatus">
-       <w-status :status="selectedStatus"></w-status>
+       <w-status :status="selectedStatus" v-on:close="closeSeletedStatus"></w-status>
     </div>
   </div>
 </template>
 
 <script>
   import backend from './services/backend';
+  import fb from './services/fb';
   import WMap from './components/WMap';
   import WStatus from './components/WStatus';
   import WFilters from './components/WFilters';
-  import WLogin from './components/WLogin';
   import utils from './utils';
 
   export default {
     name: 'app',
+    mounted() {
+      this.$nextTick(() => fb.init());
+    },
     data() {
       this.statuses = [];
       this.loading = true;
@@ -49,13 +54,13 @@
         statuses: this.statuses,
         loading: this.loading,
         selectedStatus: this.selectedStatus,
+        profile: fb.profile,
       };
     },
     components: {
       'w-map': WMap,
       'w-status': WStatus,
       'w-filters': WFilters,
-      'w-login': WLogin,
     },
     methods: {
       executeFTS(ftsQuery) {
@@ -80,6 +85,11 @@
         utils.addToCurrentLocation('id', status.id);
         backend.getStatusDetails(status.id).then(response => (this.selectedStatus = response.body));
       },
+      closeSeletedStatus() {
+        this.selectedStatus = null;
+      },
+      login: fb.login,
+      logout: fb.logout,
     },
   };
 </script>
@@ -102,7 +112,8 @@
   }
   .filters {
     height: 50px;
-    width: calc(100% - 250px);
+    width: calc(100% - 500px);
+    float: left;
   }
   .map {
     width: 100%;
@@ -114,7 +125,20 @@
   }
   .selected-status {
     width: 350px;
-    height: calc(100vh - 50px);
+    height: calc(100vh - 35px);
     float: right;
+  }
+  .profile {
+    height: 35px;
+    width: 250px;
+    float: right;
+    margin-top: 15px;
+  }
+  .profile span {
+    float: right;
+    margin-right: 5px;
+  }
+  .profile a {
+    cursor: pointer;
   }
 </style>

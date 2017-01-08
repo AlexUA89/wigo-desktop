@@ -14,8 +14,9 @@
       <div class="dates">{{ getStatusDate(status) }}</div>
     </div>
     <div class="text">{{ status.text.slice(0, 450) }}...</div>
-    <div class="showDetails">
+    <div class="show-details">
       <button class="btn btn-success" @click="openModal(status)">Show details</button>
+      <button class="btn btn-default" @click="close">close</button>
     </div>
 
     <!-- modal window with details -->
@@ -28,25 +29,26 @@
           <div class="modal-image">
             <w-image-slider :images="getStatusImages(status)"></w-image-slider>
           </div>
-          <hr/>
+          <div class="modal-dates">{{ getStatusDate(status) }}</div>
           <div class="status-modal-description-text">
             {{ status.text }}
           </div>
         </div>
         <div class="modal-chat">
           <div v-for="comment in statusComments" class="talkbubble">
-            <strong>{{ comment.nickname }}</strong>,&nbsp;&nbsp;<small><i>{{ comment.created }}</i></small><br>
+            <strong>{{ comment.nickname }}</strong>,&nbsp;&nbsp;
+            <small><i>{{ formatDatetime(comment.created) }}</i></small><br>
             {{ comment.text }}
           </div>
           <div v-if="!statusComments.length" class="no-comments">No comments yet. Be first!</div>
           <div class="new-comment">
-            <textarea></textarea>
-            <button class="btn btn-success">S</button>
+            <textarea v-model='newCommentText'></textarea>
+            <button class="btn btn-success" @click="comment">S</button>
           </div>
         </div>
       </div>
       <div slot="footer">
-        <button class="btn btn-primary">Event on Facebook</button>
+        <a v-bind:href="status.url" target="_blank"><button class="btn btn-primary">Event on Facebook</button></a>
         <button class="btn btn-default" @click="showModal = false">Close</button>
       </div>
     </w-modal>
@@ -59,15 +61,27 @@
   import backend from '../services/backend';
   import WModal from './WModal';
   import WImageSlider from './WImageSlider';
+  import fb from '../services/fb';
 
   const defaultImage = require('../assets/logo.png');
+
+  function login(callback) {
+    /* global $ */
+    $.notify('Please login to add a new comment.', {
+      globalPosition: 'top left',
+      className: 'info',
+    });
+    fb.login(callback);
+  }
 
   export default {
     props: ['status', 'loading'],
     data() {
       this.statusComments = [];
+      this.newCommentText = '';
       return {
         showModal: false,
+        newCommentText: this.newCommentText,
         statusComments: this.statusComments,
       };
     },
@@ -87,8 +101,40 @@
         return [defaultImage];
       },
       openModal(status) {
+        console.log(status);
         this.showModal = true;
         backend.getStatusComments(status).then(response => (this.statusComments = response.body));
+      },
+      formatDatetime(datetime) {
+        /* global moment */
+        let momentDatetime = null;
+        if (datetime) {
+          momentDatetime = moment(datetime);
+        } else {
+          momentDatetime = moment();
+        }
+        return momentDatetime.format('YYYY-MM-DD HH:MM');
+      },
+      postComment(text) {
+        const vm = this;
+        function c() {
+          vm.statusComments.push({ text, nickname: fb.profile.name, created: vm.formatDatetime() });
+          backend.postStatusComment(this.status, text, fb.profile);
+        }
+        return c;
+      },
+      comment() {
+        if (!this.newCommentText) return;
+        if (!fb.profile.activated) {
+          login(this.postComment(this.newCommentText));
+        } else {
+          this.postComment(this.newCommentText)();
+        }
+        this.newCommentText = '';
+      },
+      close() {
+        this.showModal = false;
+        this.$emit('close');
       },
     },
     components: {
@@ -99,7 +145,7 @@
 </script>
 
 <style scoped>
-  .main, .header, .main-image, .text, .details, .showDetails {
+  .main, .header, .main-image, .text, .details, .show-details {
     width: 100%;
   }
   .header {
@@ -152,16 +198,22 @@
     overflow-y: auto;
     text-align: justify;
   }
-  .showDetails {
+  .show-details {
     background: white;
     height: 80px;
     display: flex;
     align-items: center;
     justify-content: center;
   }
+  .show-details .btn-default {
+    margin-left: 10px;
+  }
   .modal-body {
     width: 100%;
     height: 70vh;
+  }
+  .modal-image {
+    margin-bottom: 5px;
   }
   .status-modal-description {
     width: calc(100% - 300px);
@@ -170,9 +222,13 @@
     text-align: justify;
   }
   .status-modal-description-text {
-    height: calc(70vh - 250px);
+    height: calc(70vh - 230px);
     overflow-y: auto;
     padding-right: 12px;
+  }
+  .modal-dates {
+    background-color: lightgrey;
+    margin-bottom: 3px;
   }
   .modal-chat {
     width: 300px;
@@ -239,5 +295,5 @@
     height: 3em;
     width: 3em;
     margin-left: 5px;
-  } 
+  }
 </style>
