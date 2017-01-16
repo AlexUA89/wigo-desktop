@@ -125,7 +125,7 @@
   }
   .selected-status {
     width: 350px;
-    height: calc(100vh - 35px);
+    height: calc(100vh - 50px);
     float: right;
   }
   .profile {

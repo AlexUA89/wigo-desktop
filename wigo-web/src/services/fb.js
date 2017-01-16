@@ -57,7 +57,7 @@ export default {
         return;
       }
       initProfile(response.authResponse.accessToken);
-      callback();
+      callback(response);
     });
   },
   logout() {

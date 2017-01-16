@@ -35,15 +35,17 @@
           </div>
         </div>
         <div class="modal-chat">
-          <div v-for="comment in statusComments" class="talkbubble">
-            <strong>{{ comment.nickname }}</strong>,&nbsp;&nbsp;
-            <small><i>{{ formatDatetime(comment.created) }}</i></small><br>
-            {{ comment.text }}
+          <div v-if="statusComments.length" id="messages" class="messages">
+            <div v-for="comment in statusComments" class="talkbubble">
+              <strong>{{ comment.nickname }}</strong>,
+              <small><i>{{ formatDatetime(comment.created) }}</i></small><br>
+              <span>{{ comment.text }}</span>
+            </div>
           </div>
           <div v-if="!statusComments.length" class="no-comments">No comments yet. Be first!</div>
           <div class="new-comment">
-            <textarea v-model='newCommentText'></textarea>
-            <button class="btn btn-success" @click="comment">S</button>
+            <textarea v-model='newCommentText' @keyup.enter="comment"></textarea>
+            <button class="btn btn-success" @click="comment"><i class="glyphicon glyphicon-send"></i></button>
           </div>
         </div>
       </div>
@@ -58,6 +60,7 @@
 
 <script>
   /* global moment */
+  /* global document */
   import backend from '../services/backend';
   import WModal from './WModal';
   import WImageSlider from './WImageSlider';
@@ -74,6 +77,11 @@
     fb.login(callback);
   }
 
+  function scrollDown() {
+    const element = document.getElementById('messages');
+    element.scrollTop = element.scrollHeight;
+  }
+
   export default {
     props: ['status', 'loading'],
     data() {
@@ -83,7 +91,11 @@
         showModal: false,
         newCommentText: this.newCommentText,
         statusComments: this.statusComments,
+        profile: fb.profile,
       };
+    },
+    mounted() {
+      setInterval(this.pullComments, 5000);
     },
     methods: {
       getStatusIcon: backend.getStatusIcon,
@@ -101,9 +113,11 @@
         return [defaultImage];
       },
       openModal(status) {
-        console.log(status);
         this.showModal = true;
-        backend.getStatusComments(status).then(response => (this.statusComments = response.body));
+        backend.getStatusComments(status).then((response) => {
+          this.statusComments = response.body;
+          this.$nextTick(scrollDown);
+        });
       },
       formatDatetime(datetime) {
         /* global moment */
@@ -113,15 +127,27 @@
         } else {
           momentDatetime = moment();
         }
-        return momentDatetime.format('YYYY-MM-DD HH:MM');
+        return momentDatetime.format('YYYY-MM-DD HH:mm');
       },
       postComment(text) {
         const vm = this;
         function c() {
           vm.statusComments.push({ text, nickname: fb.profile.name, created: vm.formatDatetime() });
-          backend.postStatusComment(this.status, text, fb.profile);
+          backend.postStatusComment(vm.status, text, fb.profile);
         }
         return c;
+      },
+      pullComments() {
+        if (!this.showModal) { return; }
+        const from = moment().utc().add(-5, 'minutes');
+        const existIds = [];
+        this.statusComments.forEach((comment) => { existIds.push(comment.id); });
+        backend.getStatusComments(this.status, from).then((response) => {
+          const comments = response.body;
+          comments.forEach((comment) => {
+            if (!existIds.includes(comment.id)) { this.statusComments.push(comment); }
+          });
+        });
       },
       comment() {
         if (!this.newCommentText) return;
@@ -131,6 +157,7 @@
           this.postComment(this.newCommentText)();
         }
         this.newCommentText = '';
+        this.$nextTick(scrollDown);
       },
       close() {
         this.showModal = false;
@@ -193,14 +220,14 @@
   .text {
     padding-left: 5px;
     padding-right: 5px;
-    height: calc(100vh - 390px);
+    height: calc(100vh - 370px);
     background: white;
     overflow-y: auto;
     text-align: justify;
   }
   .show-details {
     background: white;
-    height: 80px;
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -234,8 +261,11 @@
     width: 300px;
     height: 70vh;
     float: right;
-    padding-left: 25px;
+  }
+  .modal-chat .messages {
+    height: calc(70vh - 65px);
     overflow-y: auto;
+    padding-left: 25px;
   }
   .talkbubble {
     position: relative;
@@ -257,6 +287,10 @@
     border-right: 13px solid lightblue;
     border-bottom: 13px solid transparent;
   }
+  .talkbubble span {
+    width: 257px;
+    word-wrap: break-word;
+  }
   .talkbubble-my:before {
     content:"";
     position: absolute;
@@ -274,6 +308,7 @@
   .new-comment {
     position: absolute;
     bottom: 0;
+    padding-left: 25px;
   }
   .new-comment textarea {
     float: left;

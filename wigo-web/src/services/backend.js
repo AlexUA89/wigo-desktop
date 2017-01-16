@@ -106,17 +106,18 @@ export default {
     return selectedIcons;
   },
   statusListQueryParams,
-  getStatusComments(status) {
-    return Vue.http.get(`${statusListURL}/${status.id}/messages`);
+  getStatusComments(status, from) {
+    let url = `${statusListURL}/${status.id}/messages`;
+    if (from) { url = utils.updateQueryStringParameter(url, 'from', from.format(datetimeFormat)); }
+    return Vue.http.get(url);
   },
   getUserDetails(token) {
     return Vue.http.post('login', { fbToken: token });
   },
   postStatusComment(status, commentText, profile) {
-    console.log({ message: commentText, userId: profile.id });
     return Vue.http.post(
       `${statusListURL}/${status.id}/messages`,
-      { message: commentText, userId: profile.id },
+      { text: commentText, userId: profile.id },
       { headers: { Authorization: `bearer ${profile.token}` } },
     );
   },
