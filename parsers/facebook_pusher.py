@@ -13,7 +13,7 @@ DATA_PATH = os.path.join('data')
 FILE_NAME = 'fb_events.json'
 CACHE_FILE_NAME = '~facebook_pushed_events.json'
 # WIGO domain
-DOMAIN = 'http://54.208.250.42:8080/wigo-server/'
+DOMAIN = 'http://52.90.115.129:8080/wigo-server/'
 # WIGO status URL
 STATUS_URL = 'api/status'
 # WIGO token
@@ -25,11 +25,9 @@ STATUS_URL = 'api/status'
 
 DEFAULT_HEADERS = {
     'Content-Type': 'application/json',
-    'Authorization': 'bearer eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJ3aWdvLmNvbSIsInN1'
-                     'YiI6ImY5MDg4NTRiLTkzZjUtNDhiYy05MjEzLTdhYmNiMTE2OWQ0OCIsI'
-                     'mlhdCI6MTQ4MDE1NTcxMiwiZXhwIjoxNDgyNzQ3NzEyfQ.jNOvWbdjzzE'
-                     '2uNcTDR0j4rLLrgH0OIhMtwRIkId5LiO_aoEIstNncaoUJtQCALQFSqT5'
-                     'piSUpBjB05-Vt0I13w',
+    'Authorization': 'bearer eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJ3aWdvLmNvbSIsInN1YiI6ImY5MDg4NTRiLTkzZjUtNDhiYy05MjEzLTdh'
+                     'YmNiMTE2OWQ0OCIsImlhdCI6MTQ4NTA0NTc5NiwiZXhwIjoxNDg3NjM3Nzk2fQ.E5EYIYrWuAmN0yS30T4hp-qXCHwkPAgmY'
+                     'wE9zzNvfNFgjjReaPW1nR_EPYIQlSJ8561W0r1rolfXB2SRmLwZFw',
 }
 
 with open(os.path.join(DATA_PATH, FILE_NAME), 'r') as f:
