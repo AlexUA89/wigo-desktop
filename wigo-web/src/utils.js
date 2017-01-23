@@ -7,8 +7,31 @@ export default {
     if (uri.match(re)) return uri.replace(re, `$1${key}=${value}$2`);
     return `${uri}${separator}${key}=${value}`;
   },
+  deleteQueryStringParameter(url, parameter) {
+    // prefer to use l.search if you have a location/link object
+    const urlparts = url.split('?');
+    if (urlparts.length >= 2) {
+      const prefix = encodeURIComponent(parameter);
+      const pars = urlparts[1].split(/[&;]/g);
+
+      // reverse iteration as may be destructive
+      for (let i = pars.length - 1; i > 0; i -= 1) {
+        // idiom for string.startsWith
+        if (pars[i].lastIndexOf(`${prefix}=`, 0) !== -1) {
+          pars.splice(i, 1);
+        }
+      }
+      const joinedPars = pars.join('&');
+      return urlparts[0] + (pars.length > 0 ? `?${joinedPars}` : '');
+    }
+    return url;
+  },
   addToCurrentLocation(key, value) {
     const url = this.updateQueryStringParameter(window.location.href, key, value);
+    window.history.pushState('', '', url);
+  },
+  removeFromCurrentLocation(key) {
+    const url = this.deleteQueryStringParameter(window.location.href, key);
     window.history.pushState('', '', url);
   },
   getQueryString() {

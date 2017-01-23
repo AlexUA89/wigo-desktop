@@ -4,9 +4,9 @@
       <h4 class="categories-select-modal" slot="header">Categories</h4>
       <div slot="body">
         <ul class="categories-list">
-          <li class="categories-list-item" 
+          <li class="categories-list-item"
               v-for="category in categories"
-              v-bind:class="{ selected: category.selected }" 
+              v-bind:class="{ selected: category.selected }"
               @click="category.selected = !category.selected">
             <img :src="category.icon"/>{{ category.name }}
           </li>
@@ -26,7 +26,7 @@
     </w-modal>
     <div class="category" @click="showModal = true">
       <span>
-        <img v-for="category in categories.filter(c => c.selected).slice(0, 5)" 
+        <img v-for="category in categories.filter(c => c.selected).slice(0, 5)"
              :src="category.icon"/>
         &nbsp;...&nbsp;
       </span>
@@ -107,6 +107,7 @@
       categoriesSelected() {
         this.showModal = false;
         this.$emit('categories', this.categories.filter(c => c.selected));
+        console.log(this.categories);
       },
     },
     mounted() {
@@ -158,6 +159,7 @@
     -webkit-column-gap: 20;
     column-count: 3;
     column-gap: 20;
+    height: 400px;
   }
   .categories-list-item {
     cursor: pointer;
@@ -166,9 +168,6 @@
   }
   .categories-list-item.selected {
     background: #c1f0c1;
-  }
-  .categories-list-item:hover {
-    border: solid 2px #969696;
   }
   .btn-left {
     float: left;

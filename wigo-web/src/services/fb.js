@@ -1,3 +1,4 @@
+/* global $ */
 /* global FB */
 /* global window */
 /* global document */
@@ -10,9 +11,7 @@ const profile = {
 
 function initProfile(fbToken) {
   backend.getUserDetails(fbToken).then((response) => {
-    if (response.status !== 200) {
-      console.log('User is not initialized');
-    } else {
+    if (response.status === 200) {
       localStorage.setItem('fbToken', fbToken);
       profile.activated = true;
       profile.name = response.body.user.name;
@@ -53,7 +52,10 @@ export default {
   login(callback) {
     FB.login((response) => {
       if (response.status !== 'connected') {
-        console.log('Failed to login');
+        $.notify('Failed to login.', {
+          globalPosition: 'top left',
+          className: 'error',
+        });
         return;
       }
       initProfile(response.authResponse.accessToken);
@@ -64,6 +66,13 @@ export default {
     localStorage.removeItem('fbToken');
     profile.activated = false;
     FB.logout();
+  },
+  loginWithMessage(message, callback) {
+    $.notify(message, {
+      globalPosition: 'top left',
+      className: 'info',
+    });
+    this.login(callback);
   },
   profile,
 };

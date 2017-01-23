@@ -7,7 +7,7 @@ import utils from '../utils';
 // configuration
 Vue.use(VueResource);
 Vue.http.options.root = config.api_root;
-Vue.http.headers.common['Access-Control-Allow-Origin'] = config.api_cors;
+Vue.http.headers.common['Access-Control-Allow-Origin'] = config.api_root;
 
 /* eslint global-require: "off" */
 const icons = {
@@ -34,6 +34,8 @@ const icons = {
   fitness: require('../assets/categories/fitness.png'),
   festival_event: require('../assets/categories/festival_event.png'),
   volunteering: require('../assets/categories/volunteering.png'),
+  celebration: require('../assets/categories/celebration.png'),
+  activity: require('../assets/categories/activity.png'),
   other: require('../assets/categories/other.png'),
 };
 
@@ -121,4 +123,21 @@ export default {
       { headers: { Authorization: `bearer ${profile.token}` } },
     );
   },
+  postStatus(status, profile) {
+    return Vue.http.post(
+      statusListURL,
+      {
+        name: status.name,
+        startDate: status.startDate,
+        endDate: status.endDate,
+        text: status.text,
+        kind: 'event',
+        latitude: status.latitude,
+        longitude: status.longitude,
+        category: status.category.toUpperCase(),
+      },
+      { headers: { Authorization: `bearer ${profile.token}` } },
+    );
+  },
+  icons,
 };

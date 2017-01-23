@@ -86,6 +86,7 @@
         backend.getStatusDetails(status.id).then(response => (this.selectedStatus = response.body));
       },
       closeSeletedStatus() {
+        utils.removeFromCurrentLocation('id');
         this.selectedStatus = null;
       },
       login: fb.login,

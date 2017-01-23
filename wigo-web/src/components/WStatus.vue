@@ -68,15 +68,6 @@
 
   const defaultImage = require('../assets/logo.png');
 
-  function login(callback) {
-    /* global $ */
-    $.notify('Please login to add a new comment.', {
-      globalPosition: 'top left',
-      className: 'info',
-    });
-    fb.login(callback);
-  }
-
   function scrollDown() {
     const element = document.getElementById('messages');
     element.scrollTop = element.scrollHeight;
@@ -132,8 +123,14 @@
       postComment(text) {
         const vm = this;
         function c() {
-          vm.statusComments.push({ text, nickname: fb.profile.name, created: vm.formatDatetime() });
-          backend.postStatusComment(vm.status, text, fb.profile);
+          backend.postStatusComment(vm.status, text, fb.profile).then((response) => {
+            vm.statusComments.push({
+              text,
+              nickname: fb.profile.name,
+              created: vm.formatDatetime(),
+              id: response.body.id,
+            });
+          });
         }
         return c;
       },
@@ -152,7 +149,7 @@
       comment() {
         if (!this.newCommentText) return;
         if (!fb.profile.activated) {
-          login(this.postComment(this.newCommentText));
+          fb.loginWithMessage('Please login to add a new comment.', this.postComment(this.newCommentText));
         } else {
           this.postComment(this.newCommentText)();
         }
@@ -282,7 +279,7 @@
     right: 100%;
     width: 0;
     height: 0;
-    
+
     border-top: 13px solid transparent;
     border-right: 13px solid lightblue;
     border-bottom: 13px solid transparent;
@@ -297,12 +294,12 @@
     left: 100%;
     width: 0;
     height: 0;
-    
+
     border-top: 13px solid transparent;
     border-left: 13px solid lightblue;
     border-bottom: 13px solid transparent;
   }
-  .no-comments { 
+  .no-comments {
     text-align: center;
   }
   .new-comment {
