@@ -47,7 +47,7 @@ class BCELoader(object):
     """ Loads events from bigcityevents.com using websockets. """
 
     # To get this URL go to http://bigcityevent.com/ and check ws request URL.
-    WS_URL = 'ws://bigcityevent.com/sockjs/568/61xhvkn5/websocket'
+    WS_URL = 'ws://bigcityevent.com/sockjs/386/7aspm0mg/websocket'
     FILE_NAME = 'bce_events.json'
     HEADERS = [
         'Accept-Encoding:gzip, deflate, sdch',
@@ -185,9 +185,9 @@ class FBLoader(object):
 
 if __name__ == "__main__":
     # STEP 1: Load events from bigcityevents.com
-    # bce_loader = BCELoader()
-    # bce_loader.load()
-    # save_events(bce_loader.events, bce_loader.FILE_NAME)
+    bce_loader = BCELoader()
+    bce_loader.load()
+    save_events(bce_loader.events, bce_loader.FILE_NAME)
 
     # STEP 2: Update events data based on facebook.
     path = os.path.join(DATA_PATH, BCELoader.FILE_NAME)
