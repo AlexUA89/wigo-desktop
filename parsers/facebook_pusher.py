@@ -4,7 +4,9 @@ import json
 import os
 import urllib
 
+import pytz
 import requests
+import dateutil.parser
 
 # parsed data folder (relative or absolute path)
 DATA_PATH = os.path.join('data')
@@ -13,7 +15,7 @@ DATA_PATH = os.path.join('data')
 FILE_NAME = 'fb_events.json'
 CACHE_FILE_NAME = '~facebook_pushed_events.json'
 # WIGO domain
-DOMAIN = 'http://52.90.115.129:8080/wigo-server/'
+DOMAIN = 'http://wigo.ml/'
 # WIGO status URL
 STATUS_URL = 'api/status'
 # WIGO token
@@ -40,9 +42,9 @@ except IOError:
     pushed_events_ids = []
 
 
-def _format_time(time):
-    """ 2016-10-08T15:00:00+0300 -> 2016-10-08T15:00:00.000Z """
-    return time.split('+')[0] + '.000Z'
+def _format_time(s):
+    """ 2016-10-08T15:00:00+0300 -> 2016-10-08T12:00:00.000Z """
+    return dateutil.parser.parse(s).astimezone(pytz.utc).isoformat()[:-6]+'Z'
 
 
 def push_event(event):
